@@ -3,7 +3,6 @@ import { HttpClient } from '@angular/common/http';
 import { concat, interval, Observable, of, take } from 'rxjs';
 import { delay, map, tap } from 'rxjs/operators';
 import * as utils from '../../app/common/util';
-import { log } from '@angular-devkit/build-angular/src/builders/ssr-dev-server';
 
 @Component({
   selector: 'about',
