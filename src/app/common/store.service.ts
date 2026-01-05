@@ -1,9 +1,8 @@
 import {Injectable} from '@angular/core';
-import {BehaviorSubject, Observable, Subject, timer} from 'rxjs';
+import {BehaviorSubject, Observable, Subject, timer, from} from 'rxjs';
 import {Course} from '../model/course';
 import {delayWhen, filter, map, retryWhen, shareReplay, tap, withLatestFrom} from 'rxjs/operators';
-import {createHttpObservable} from './util';
-import {fromPromise} from 'rxjs/internal-compatibility';
+import {createViaPromiseHttpObservable} from './util';
 
 
 @Injectable({
@@ -20,12 +19,12 @@ export class Store {
 
     init() {
 
-        const http$ = createHttpObservable('/api/courses');
+        const http$ = createViaPromiseHttpObservable('/api/courses');
 
         http$
             .pipe(
                 tap(() => console.log('HTTP request executed')),
-                map(res => Object.values(res['payload']))
+                map(res => Object.values(res) as Course[])
             )
             .subscribe(
                 courses => this.subject.next(courses)
@@ -72,7 +71,7 @@ export class Store {
 
         this.subject.next(newCourses);
 
-        return fromPromise(fetch(`/api/courses/${courseId}`, {
+        return from(fetch(`/api/courses/${courseId}`, {
             method: 'PUT',
             body: JSON.stringify(changes),
             headers: {

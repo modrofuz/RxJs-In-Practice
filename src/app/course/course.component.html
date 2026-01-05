@@ -1,6 +1,7 @@
 <div class="course">
 
   @if ((course$ | async); as course) {
+  <p>{{course?.iconUrl}}</p>
     <h2>{{course?.description}}</h2>
     <img class="course-thumbnail" [src]="course?.iconUrl">
   }
