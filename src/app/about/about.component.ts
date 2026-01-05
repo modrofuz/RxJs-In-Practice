@@ -43,3 +43,9 @@ export class AboutComponent implements OnInit {
     combinedObs$.subscribe((res) => console.log(res));
   }
 }
+
+
+
+
+
+

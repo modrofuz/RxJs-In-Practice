@@ -93,3 +93,14 @@ export class CourseComponent implements OnInit, AfterViewInit {
       .pipe(map((res) => res.payload));
   }
 }
+
+
+
+
+
+
+
+
+
+
+
