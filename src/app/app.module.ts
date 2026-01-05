@@ -1,4 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
+import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -24,6 +25,7 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatSortModule } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
 import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatFormFieldModule } from '@angular/material/form-field';
 import {HttpClientModule} from "@angular/common/http";
 import { CourseDialogComponent } from './course-dialog/course-dialog.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -40,6 +42,7 @@ import { MatMomentDateModule } from '@angular/material-moment-adapter';
     ],
     imports: [
         BrowserModule,
+        CommonModule,
         BrowserAnimationsModule,
         HttpClientModule,
         MatMenuModule,
@@ -56,6 +59,7 @@ import { MatMomentDateModule } from '@angular/material-moment-adapter';
         MatSortModule,
         MatProgressSpinnerModule,
         MatDialogModule,
+        MatFormFieldModule,
         AppRoutingModule,
         MatSelectModule,
         MatDatepickerModule,
