@@ -1,21 +1,16 @@
-import {Component, OnInit} from '@angular/core';
-import {Store} from './common/store.service';
+import { Component, inject, OnInit } from '@angular/core';
+import { Store } from './common/store.service';
 
 @Component({
-    selector: 'app-root',
-    templateUrl: './app.component.html',
-    styleUrls: ['./app.component.css'],
-    standalone: false
+  selector: 'app-root',
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.css'],
+  standalone: false,
 })
-export class AppComponent implements  OnInit{
+export class AppComponent implements OnInit {
+  store = inject(Store);
 
-
-    constructor(private store:Store) {
-
-    }
-
-    ngOnInit() {
-        this.store.init();
-    }
-
+  ngOnInit() {
+    this.store.init();
+  }
 }

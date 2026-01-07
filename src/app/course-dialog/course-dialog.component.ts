@@ -12,7 +12,8 @@ import { Course } from '../model/course';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import moment from 'moment';
 import {
-  concatMap, exhaustMap,
+  concatMap,
+  exhaustMap,
   filter,
   fromEvent,
   interval,
@@ -22,7 +23,8 @@ import {
 } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 
-import { map, tap } from 'rxjs/operators';
+import { catchError, map, tap } from 'rxjs/operators';
+import { Store } from '../common/store.service';
 
 @Component({
   selector: 'course-dialog',
@@ -40,7 +42,7 @@ export class CourseDialogComponent implements OnInit, AfterViewInit {
   @ViewChild('searchInput', { static: true }) searchInput: ElementRef;
 
   httpClient = inject(HttpClient);
-
+  store = inject(Store);
   constructor(
     private fb: FormBuilder,
     private dialogRef: MatDialogRef<CourseDialogComponent>,
@@ -63,7 +65,7 @@ export class CourseDialogComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit() {
     if (this.saveButton) {
-     /* fromEvent(this.saveButton.nativeElement, 'click')
+      /* fromEvent(this.saveButton.nativeElement, 'click')
         .pipe(
           tap((event) => console.log(event)),
           concatMap(() => this.saveCourse(this.form.value)),
@@ -107,9 +109,9 @@ export class CourseDialogComponent implements OnInit, AfterViewInit {
   }
 
   usingExhaustMap() {
-    return fromEvent(this.saveButton.nativeElement,'click').pipe(
-      exhaustMap(() => this.saveCourse(this.form.value))
-    )
+    return fromEvent(this.saveButton.nativeElement, 'click').pipe(
+      exhaustMap(() => this.saveCourse(this.form.value)),
+    );
   }
 
   saveCourse(changes): Observable<any> {
@@ -128,5 +130,17 @@ export class CourseDialogComponent implements OnInit, AfterViewInit {
     this.dialogRef.close();
   }
 
-  save() {}
+  save() {
+    this.store
+      .saveCourse(this.course.id, this.form.value)
+      .pipe(
+        tap(() => this.close()),
+        catchError((error) => {
+          console.log(error);
+          const err = new Error('Save failed');
+          throw err;
+        }),
+      )
+      .subscribe();
+  }
 }

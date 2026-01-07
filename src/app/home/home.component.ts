@@ -1,16 +1,20 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { createViaPromiseHttpObservable } from '../common/util';
 import {
-  catchError, delayWhen,
+  catchError,
+  delayWhen,
   filter,
   finalize,
   interval,
-  Observable, retry,
+  Observable,
+  retry,
   retryWhen,
-  take, timer,
+  take,
+  timer,
 } from 'rxjs';
 import { Course } from '../model/course';
 import { map, shareReplay, tap } from 'rxjs/operators';
+import { Store } from '../common/store.service';
 
 @Component({
   selector: 'home',
@@ -21,13 +25,19 @@ import { map, shareReplay, tap } from 'rxjs/operators';
 export class HomeComponent implements OnInit {
   beginnerCourses$: Observable<Course[]>;
   advancedCourses$: Observable<Course[]>;
+  store = inject(Store);
 
   constructor() {}
 
   ngOnInit() {
+    const courses$: Observable<Course[]> = this.store.courses$;
+    this.advancedCourses$ = this.store.selectBeginnerCourses();
+    this.beginnerCourses$ = this.store.selectBeginnerCourses();
+
+    //     this.advancedCourses$ = courses$.pipe(
     //this.shareReplayExample();
 
-    const courses$: Observable<Course[]> = createViaPromiseHttpObservable(
+    /* const courses$: Observable<Course[]> = createViaPromiseHttpObservable(
       '/api/courses',
     ).pipe(
       catchError((err) => {
@@ -39,10 +49,10 @@ export class HomeComponent implements OnInit {
           delayWhen(() => timer(2000))
         );
       }),*/
-      retry({count: 3, delay:2000}),
-      finalize(() => console.log('finalized')),
-      shareReplay(),
-    );
+    //   retry({count: 3, delay:2000}),
+    //   finalize(() => console.log('finalized')),
+    //   shareReplay(),
+    // );
     /*  courses$.subscribe({
       next: (courses: Course[]) => {
         console.log(courses);
@@ -50,23 +60,23 @@ export class HomeComponent implements OnInit {
       error: noop,
       complete: () => console.log('completed'),
     });*/
-    this.advancedCourses$ = courses$.pipe(
-      tap((courses: Course[]) => console.log(courses)),
-      filter((courses: Course[]) => courses.length > 0),
-      map((courses: Course[]) =>
-        courses.filter(
-          (course) => course.category.toLowerCase() === 'advanced',
-        ),
-      ),
-    );
-    this.beginnerCourses$ = courses$.pipe(
-      filter((courses: Course[]) => courses.length > 0),
-      map((courses: Course[]) =>
-        courses.filter(
-          (course) => course.category.toLowerCase() === 'beginner',
-        ),
-      ),
-    );
+    // this.advancedCourses$ = courses$.pipe(
+    //   tap((courses: Course[]) => console.log(courses)),
+    //   filter((courses: Course[]) => courses.length > 0),
+    //   map((courses: Course[]) =>
+    //     courses.filter(
+    //       (course) => course.category.toLowerCase() === 'advanced',
+    //     ),
+    //   ),
+    // );
+    // this.beginnerCourses$ = courses$.pipe(
+    //   filter((courses: Course[]) => courses.length > 0),
+    //   map((courses: Course[]) =>
+    //     courses.filter(
+    //       (course) => course.category.toLowerCase() === 'beginner',
+    //     ),
+    //   ),
+    // );
   }
 
   shareReplayExample() {
