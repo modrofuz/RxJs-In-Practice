@@ -13,5 +13,9 @@
       "node_modules/@types"
     ],
     "useDefineForClassFields": false
+  },
+  "angularCompilerOptions": {
+    "strictInjectionParameters": true,
+    "strictTemplates": true
   }
 }

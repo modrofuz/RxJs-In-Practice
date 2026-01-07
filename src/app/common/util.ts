@@ -3,16 +3,18 @@ import { map } from 'rxjs/operators';
 import { Course } from '../model/course';
 import { Signal } from '@angular/core';
 
-export function createViaAsyncPromiseHttpObservable(url: string): Observable<any> {
+export function createViaAsyncPromiseHttpObservable(
+  url: string,
+): Observable<any> {
   return new Observable((observer) => {
     const fetchData = async () => {
       try {
         const resp = await fetch(url);
         const body = await resp.json();
+        console.log(body);
         observer.next(body.payload);
         observer.complete();
       } catch (error) {
-
         console.error('error: ', error);
         observer.error(error);
       }
@@ -21,24 +23,21 @@ export function createViaAsyncPromiseHttpObservable(url: string): Observable<any
   });
 }
 
-export function createViaPromiseHttpObservable(
-  url: string,
-): Observable<any> {
+export function createViaPromiseHttpObservable(url: string): Observable<any> {
   return new Observable((observer) => {
     const abortController: AbortController = new AbortController();
     const signal: AbortSignal = abortController.signal;
     fetch(url, { signal })
       .then((response) => {
-        console.log('response.json()', response.status)
+        console.log('response.json()', response.status);
         if (response.ok) {
           return response.json();
-        }
-        else {
-          observer.error('Request faild with ' +response.status)
+        } else {
+          observer.error('Request faild with ' + response.status);
         }
       })
       .then((body) => {
-        console.log('body.payload', body.payload)
+        console.log('body.payload', body.payload);
         observer.next(body.payload);
         observer.complete();
       })
@@ -46,7 +45,7 @@ export function createViaPromiseHttpObservable(
         console.error('error', error);
         observer.error(error);
       });
-//    return () => abortController.abort()
+    //    return () => abortController.abort()
   });
 }
 
